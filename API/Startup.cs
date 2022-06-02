@@ -4,7 +4,8 @@ using API.Extensions;
 using API.Helpers;
 using API.Middleware;
 using Core.Interfaces;
-using Infrastructure.Data;
+
+using Infrastructure.Identity;
 using Infrastructure.Data.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 using System.Linq;
+using Infrastructure.Data;
 
 namespace API
 {
@@ -38,6 +40,9 @@ namespace API
 
             services.AddDbContext<StoreContext>(options =>
                 options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
+            
+            services.AddDbContext<AppIdentityDbContext>(options =>
+                options.UseSqlServer(_configuration.GetConnectionString("IdentityConnection")));
 
             services.AddSingleton<IConnectionMultiplexer>(c =>
             {
@@ -46,6 +51,8 @@ namespace API
             });
 
             services.AddApplicationServices();
+
+            services.AddIdentityServices(_configuration);
 
             services.AddSwaggerDocumentation();
             services.AddCors(opt =>
@@ -73,6 +80,8 @@ namespace API
             app.UseStaticFiles();
 
             app.UseCors("CorsPolicy");
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
