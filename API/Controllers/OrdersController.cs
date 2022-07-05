@@ -61,11 +61,11 @@ namespace API.Controllers
             return _mapper.Map<OrderToReturnDto>(order);
         }
 
-        //[HttpGet("deliveryMethods")]
-        //public async Task<ActionResult<IReadOnlyList<DeliveryMethod>>> GetDeliveryMethods()
-        //{
-        //    return Ok(await _orderService.GetDeliveryMethodsAsync());
-        //}
+        [HttpGet("deliveryMethods")]
+        public async Task<ActionResult<IReadOnlyList<DeliveryMethod>>> GetDeliveryMethods()
+        {
+            return Ok(await _orderService.GetDeliveryMethodsAsync());
+        }
     }
 }
 
